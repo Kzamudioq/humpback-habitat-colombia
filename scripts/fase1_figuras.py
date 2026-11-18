@@ -1,7 +1,6 @@
-"""Figuras de la fase 1 con la paleta del mapa.
+"""Perfil ambiental de la fase 1: distribución de cada variable del mar.
 
-Lee data/variables_fase1.csv y data/avistamientos_pacifico_co.csv
-y escribe docs/img/fase1_fondo.png y docs/img/fase1_variables.png.
+Lee data/variables_fase1.csv y escribe docs/img/fase1_variables.png.
 Uso, desde la raíz del repo:  python scripts/fase1_figuras.py
 """
 import sys, json, numpy as np, pandas as pd, matplotlib.pyplot as plt, shapely
@@ -10,69 +9,18 @@ from scipy.stats import gaussian_kde
 from matplotlib.patches import Rectangle, FancyBboxPatch
 
 VARS = sys.argv[1] if len(sys.argv) > 1 else "data/variables_fase1.csv"
-AVIS = sys.argv[2] if len(sys.argv) > 2 else "data/avistamientos_pacifico_co.csv"
-LAND = sys.argv[3] if len(sys.argv) > 3 else "data/ne_10m_land.geojson"
-OUT = sys.argv[4] if len(sys.argv) > 4 else "docs/img"
+OUT = sys.argv[2] if len(sys.argv) > 2 else "docs/img"
 FONDO, PANEL, TEXTO, SUAVE, REJILLA = "#071A2C", "#0B2238", "#EAF2F4", "#8FB3BF", "#15314A"
 C_FONDO, C_AV, C_TEL, TIERRA = "#5E7F96", "#5FE0D8", "#FF8A5B", "#D8CFBD"
 plt.rcParams.update({"font.family": "DejaVu Sans", "text.color": TEXTO})
 
 d = pd.read_csv(VARS)
-av = pd.read_csv(AVIS)
-O, E, S_, N = -82.5, -77.0, 1.4, 7.4
-
-# ---------- 1. superficie de esfuerzo y puntos de fondo ----------
-B = box(O - 0.5, S_ - 0.5, E + 0.5, N + 0.5)
-land = shapely.unary_union([g for g in (shape(f["geometry"]).intersection(B)
-                            for f in json.load(open(LAND))["features"]) if not g.is_empty])
-gx, gy = np.meshgrid(np.linspace(O, E, 450), np.linspace(S_, N, 490))
-z = gaussian_kde(np.vstack([av.lon, av.lat]), bw_method=0.15)(np.vstack([gx.ravel(), gy.ravel()])).reshape(gx.shape)
-z = z / z.max()
-z[shapely.contains_xy(land, gx, gy)] = np.nan
-
-from matplotlib.colors import LinearSegmentedColormap
-cm = LinearSegmentedColormap.from_list("esf", ["#0A2540", "#123E5E", "#1F6080", "#2FA3B4", "#8FF0E6"])
-fig = plt.figure(figsize=(9.6, 10.4), dpi=200); fig.patch.set_facecolor(FONDO)
-ax = fig.add_axes([0.08, 0.08, 0.88, 0.8]); ax.set_facecolor("#0A2540")
-ax.imshow(np.sqrt(z), extent=(O, E, S_, N), origin="lower", cmap=cm, zorder=1, aspect="auto")
-for p in getattr(land, "geoms", [land]):
-    ax.fill(*p.exterior.xy, color=TIERRA, ec="#B9AE98", lw=0.5, zorder=2)
-f = d[d.tipo == "fondo"]; t = d[d.tipo == "telemetría"]; a = d[d.tipo == "avistamiento"]
-ax.scatter(f.lon, f.lat, s=2.2, c="#C9D6DF", alpha=0.45, lw=0, zorder=3)
-ax.scatter(t.lon, t.lat, s=9, c=C_TEL, alpha=0.85, lw=0, zorder=4)
-ax.scatter(a.lon, a.lat, s=16, c="#FFF6E0", lw=0.5, edgecolors="#06182B", zorder=5)
-ax.set_xlim(O, E); ax.set_ylim(S_, N); ax.set_aspect("equal")
-ax.set_xticks(range(-82, -76)); ax.set_yticks(range(2, 8))
-ax.set_xticklabels([f"{-v}°O" for v in range(-82, -76)]); ax.set_yticklabels([f"{v}°N" for v in range(2, 8)])
-ax.tick_params(colors=SUAVE, labelsize=9, length=0)
-for s in ax.spines.values(): s.set_visible(False)
-# convenciones
-lx, ly = -82.3, 3.15
-ax.add_patch(FancyBboxPatch((lx - 0.12, 1.55), 2.75, 1.85, boxstyle="round,pad=0,rounding_size=0.05",
-                            fc=FONDO, ec=REJILLA, lw=1, alpha=0.9, zorder=8))
-ax.text(lx - 0.02, ly + 0.08, "Convenciones", fontsize=11.5, fontweight="bold", va="center", zorder=9)
-items = [("o", "#FFF6E0", 50, f"Avistamientos ({len(a)})"), ("o", C_TEL, 30, f"Telemetría satelital ({len(t)})"),
-         ("o", "#C9D6DF", 14, f"Puntos de fondo ({len(f):,})".replace(",", "."))]
-for i, (m, c, sz, n) in enumerate(items):
-    yy = ly - 0.22 - i * 0.24
-    ax.scatter([lx + 0.05], [yy], s=sz, c=c, edgecolors="#06182B" if i == 0 else "none", lw=0.5, zorder=9)
-    ax.text(lx + 0.2, yy, n, fontsize=10, va="center", zorder=9)
-ax.text(lx - 0.02, ly - 1.0, "Esfuerzo de observación", fontsize=9.5, color=SUAVE, zorder=9)
-for i in range(5):
-    ax.add_patch(Rectangle((lx - 0.02 + i * 0.4, ly - 1.33), 0.4, 0.13, color=cm(i / 4), lw=0, zorder=9))
-ax.text(lx - 0.02, ly - 1.43, "bajo", fontsize=8.5, color=SUAVE, va="top", zorder=9)
-ax.text(lx + 1.98, ly - 1.43, "alto", fontsize=8.5, color=SUAVE, va="top", ha="right", zorder=9)
-fig.text(0.08, 0.955, "Superficie de esfuerzo y puntos de fondo", fontsize=18, fontweight="bold")
-fig.text(0.08, 0.925, "Los puntos de fondo siguen la misma concentración que los registros: así el modelo compara", fontsize=10.5, color=SUAVE)
-fig.text(0.08, 0.905, "sitios con un esfuerzo de observación parecido y aprende del mar, no de dónde salen las lanchas.", fontsize=10.5, color=SUAVE)
-fig.text(0.08, 0.025, "Fuentes: GBIF.org, OBIS, Natural Earth. Elaboración: Tatiana Zamudio.", fontsize=8.5, color=SUAVE)
-plt.savefig(f"{OUT}/fase1_fondo.png", facecolor=FONDO); plt.close()
 
 # ---------- 2. variables: fondo vs avistamientos vs telemetría ----------
 var = [("sst", "Temperatura del mar", "°C", None), ("log_chl", "Clorofila", "log10 mg/m³", None),
        ("prof", "Profundidad", "m", (0, 4000)), ("pendiente", "Pendiente del fondo", "grados", (0, 10)),
        ("dist_costa_km", "Distancia a la costa", "km", (0, 200))]
-grupos = [("fondo", "Fondo", C_FONDO), ("avistamiento", "Avistamientos", C_AV), ("telemetría", "Telemetría", C_TEL)]
+grupos = [("fondo", "Comparación", C_FONDO), ("avistamiento", "Avistamientos", C_AV), ("telemetría", "Telemetría", C_TEL)]
 fig = plt.figure(figsize=(20, 6.2), dpi=180); fig.patch.set_facecolor(FONDO)
 w = 0.172; g = (1 - 0.04 - 5 * w) / 4
 for k, (v, tit, un, lim) in enumerate(var):
@@ -117,7 +65,7 @@ for i, (tp, n, c) in enumerate(grupos):
                             alpha=0.8 if tp == "fondo" else 1, ec="none", zorder=9))
     ax0.text(0.15, yy, n, transform=ax0.transAxes, fontsize=10, va="center", zorder=9)
 fig.text(0.02, 0.93, "Perfil ambiental de la yubarta en el Pacífico colombiano", fontsize=19, fontweight="bold")
-fig.text(0.02, 0.885, "Distribución de cada variable en los avistamientos, la telemetría y los puntos de fondo. Donde las curvas se separan, la variable ayuda a explicar dónde están.",
+fig.text(0.02, 0.885, "Distribución de cada variable en los avistamientos, la telemetría y los puntos de comparación. Donde las curvas se separan, la variable ayuda a explicar dónde están.",
          fontsize=11, color=SUAVE)
 fig.text(0.02, 0.035, "Fuentes: NOAA OISST, NASA MODIS-Aqua, NOAA ETOPO1 (vía Google Earth Engine), Natural Earth, GBIF.org, OBIS. Líneas punteadas: medianas. Elaboración: Tatiana Zamudio.",
          fontsize=9, color=SUAVE)

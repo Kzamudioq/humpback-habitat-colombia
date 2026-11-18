@@ -45,17 +45,19 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 
 ## Fase 1: las condiciones del mar donde están las ballenas
 
-El notebook `notebooks/02_fase1_variables.ipynb` le asigna a cada registro las condiciones del mar en ese lugar y en ese mes, usando Google Earth Engine: temperatura superficial (NOAA OISST), clorofila (NASA MODIS-Aqua, promedio del mes entre 2003 y 2024), profundidad y pendiente del fondo (NOAA ETOPO1) y distancia a la costa (Natural Earth). Antes se adelgazaron los registros a uno por celda de unos 2 km y por mes, para que una misma ballena registrada muchas veces no pese de más: quedan 1.186 presencias, 689 avistamientos y 497 posiciones de telemetría.
+El notebook `notebooks/02_fase1_variables.ipynb` le asigna a cada registro las condiciones del mar en ese lugar y en ese mes, usando Google Earth Engine: temperatura superficial (NOAA OISST), clorofila (NASA MODIS-Aqua, promedio del mes entre 2003 y 2024), profundidad y pendiente del fondo (NOAA ETOPO1) y distancia a la costa (Natural Earth). Antes de extraer las variables, los registros se filtraron en el espacio y en el tiempo: se conservó un solo registro por celda de 2 × 2 km y por mes. Este filtro evita que una misma ballena, registrada muchas veces en el mismo lugar, como ocurre con la telemetría, tenga más peso que las demás en el modelo. Después del filtro quedan 1.186 presencias: 689 avistamientos y 497 posiciones de telemetría.
 
-### Puntos de fondo corregidos por esfuerzo
+### Los puntos de comparación
 
-![Superficie de esfuerzo y puntos de fondo](docs/img/fase1_fondo.png)
+![Puntos de comparación del modelo](docs/img/fase1_fondo.png)
 
-**Qué muestra.** El modelo necesita comparar los lugares con ballenas contra el resto del mar. Para eso se generan 10.000 puntos de fondo (puntos grises). La clave es que no se reparten al azar: el 80 % sigue la superficie de esfuerzo (el brillo turquesa), que mide dónde se concentran los registros, y el 20 % se reparte por todo el mar. Así, cerca de Bahía Solano hay muchos puntos de fondo y mar adentro pocos, igual que los registros.
+**La idea.** Nadie registra "aquí no vi ballenas", así que el modelo no sabe directamente dónde no están. Lo que hace es comparar los lugares con registros contra una muestra del resto del mar, los puntos de comparación (en la literatura, *puntos de fondo*), y buscar qué hace distintos a los primeros: menos profundidad, más clorofila, cercanía a la costa.
 
-**Por qué importa.** Si los puntos de fondo se repartieran al azar, el modelo aprendería algo obvio y falso: que las ballenas están cerca de los puertos turísticos. Con el fondo corregido, compara sitios con un esfuerzo de observación parecido y aprende qué condiciones del mar prefieren las ballenas (Phillips et al., 2009).
+**Qué muestra.** Los puntos blancos son los 1.186 registros de ballena. El color del mar indica cuántos puntos de comparación hay en cada zona: los tonos claros, junto a la costa, son las zonas con muchos; los oscuros, mar adentro, las zonas con pocos.
 
-**Fuentes.** Registros: GBIF.org y OBIS. Línea de costa: Natural Earth. Figura generada con `scripts/fase1_figuras.py`.
+**Por qué no se reparten parejo.** Si los puntos de comparación cubrieran todo el mar por igual, la comparación sería "costa turística frente a mar abierto", y el modelo aprendería que las ballenas están cerca de los puertos, cuando en buena parte es ahí donde hay gente mirando. Por eso se concentran donde hay más observadores: así registros y puntos de comparación comparten ese sesgo, y lo que los diferencia son las condiciones del mar (Phillips et al., 2009). Es como querer saber qué plato gusta más comparando solo entre los restaurantes a los que la gente sí fue, no entre todos los de la ciudad.
+
+**Fuentes.** Registros: GBIF.org y OBIS. Línea de costa: Natural Earth. Figura generada con `scripts/fase1_fondo.py`.
 
 ### Perfil ambiental de la yubarta en el Pacífico colombiano
 
@@ -106,7 +108,8 @@ notebooks/
 scripts/
   mapa_avistamientos.py      mapa del README: avistamientos sobre la batimetría
   tiempo_avistamientos.py    gráficas de registros por año y por mes
-  fase1_figuras.py           figuras de la fase 1: fondo y variables del mar
+  fase1_fondo.py             mapa de los puntos de comparación
+  fase1_figuras.py           perfil ambiental de la fase 1
 data/                        datos descargados (no se versionan)
 docs/img/                figuras para este README
 ```
