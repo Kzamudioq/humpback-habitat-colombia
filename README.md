@@ -6,7 +6,7 @@ Modelo abierto y reproducible del hábitat estacional de la ballena jorobada (*M
 
 ## Contexto
 
-La población del Hemisferio Sur (stock G de la IWC) llega al Pacífico colombiano entre mayo y diciembre para reproducirse y criar. El área Gorgona-Tribugá-Malpelo está reconocida como Área Importante para Mamíferos Marinos (IMMA).
+La población del Hemisferio Sur (stock G de la IWC) se alimenta en el verano austral en las aguas frías del sur de Chile y la península Antártica, y migra miles de kilómetros hacia el norte para llegar al Pacífico colombiano entre mayo y diciembre. No viene a comer: viene a aparearse, parir y criar. Las madres buscan aguas cálidas, someras y protegidas, donde las crías gastan menos energía y están más a salvo de depredadores como las orcas. El área Gorgona-Tribugá-Malpelo está reconocida como Área Importante para Mamíferos Marinos (IMMA).
 
 Casi todos los registros públicos vienen de zonas de avistamiento turístico (Bahía Solano, Nuquí, Bahía Málaga, Gorgona). Un modelo que no corrija ese sesgo termina señalando los lugares donde más gente sale a buscar ballenas, en vez de los lugares que las ballenas prefieren. Este repositorio busca resolver eso con código abierto y que se actualice cada temporada.
 
@@ -66,8 +66,8 @@ El notebook `notebooks/02_fase1_variables.ipynb` le asigna a cada registro las c
 **Qué muestra.** Para cada variable, la curva gris es el fondo, la turquesa son los avistamientos y la coral es la telemetría. Las líneas punteadas son las medianas, y sus valores aparecen arriba a la derecha de cada panel. Donde las curvas se separan, la variable ayuda a explicar dónde están las ballenas.
 
 **Cómo leerlo.**
-- **Aguas someras y cerca de la costa.** Es la señal más fuerte. La mediana de profundidad es 42 m en los avistamientos y 118 m en la telemetría, frente a 1.387 m en el fondo; la distancia a la costa es 3 km y 18 km frente a 38 km. Que la telemetría, que no depende de las lanchas, muestre lo mismo indica que la preferencia es real.
-- **Más clorofila.** Las ballenas están en aguas con unas dos a tres veces más clorofila que el fondo (medianas de 0,6 a 0,8 mg/m³ frente a 0,25 mg/m³). Ojo: cerca de la costa el satélite puede confundir sedimentos de los ríos con clorofila, y esta variable está muy ligada a la distancia a la costa.
+- **Aguas someras y cerca de la costa.** Es la señal más fuerte, y coincide con lo que buscan las madres con cría. La mediana de profundidad es 42 m en los avistamientos y 118 m en la telemetría, frente a 1.387 m en el fondo; la distancia a la costa es 3 km y 18 km frente a 38 km. Que la telemetría, que no depende de las lanchas, muestre lo mismo indica que la preferencia es real.
+- **Más clorofila.** Las ballenas están en aguas con unas dos a tres veces más clorofila que el fondo (medianas de 0,6 a 0,8 mg/m³ frente a 0,25 mg/m³). Ojo: no significa que vengan a comer, porque en esta zona casi no se alimentan. La clorofila alta marca aguas costeras, y cerca de la costa el satélite además puede confundir sedimentos de los ríos con clorofila.
 - **La temperatura no es concluyente.** Los avistamientos están en aguas más cálidas (28,3 °C) y la telemetría en más frías (26,7 °C) que el fondo (27,4 °C). La diferencia viene de las fechas: la telemetría es casi toda de julio de 2013. El modelo tendrá que separar el efecto del año y del mes.
 - **La pendiente del fondo casi no cambia** entre los tres grupos.
 

@@ -33,24 +33,46 @@ ax.set_xticks(range(-82, -76)); ax.set_yticks(range(2, 8))
 ax.set_xticklabels([f"{-v}°O" for v in range(-82, -76)]); ax.set_yticklabels([f"{v}°N" for v in range(2, 8)])
 ax.tick_params(colors=SUAVE, labelsize=9, length=0)
 for s in ax.spines.values(): s.set_visible(False)
-# anotaciones directas
-def nota(x, y, t, ha="left"):
-    ax.text(x, y, t, fontsize=10.5, color=TEXTO, ha=ha, va="center", zorder=6, linespacing=1.4,
-            bbox=dict(boxstyle="round,pad=0.5", fc=FONDO, ec=REJILLA, alpha=0.9))
-nota(-80.9, 6.55, "Mar adentro casi nadie observa:\naquí el modelo toma\npocos puntos de comparación")
-nota(-80.15, 3.55, "Cerca de la costa hay más\nobservadores: aquí toma\nmuchos puntos de comparación")
 # convenciones
-lx, ly = -82.3, 2.6
-ax.add_patch(FancyBboxPatch((lx - .12, 1.55), 2.75, 1.4, boxstyle="round,pad=0,rounding_size=0.05", fc=FONDO, ec=REJILLA, lw=1, alpha=0.92, zorder=8))
-ax.text(lx - .02, ly + .17, "Convenciones", fontsize=11.5, fontweight="bold", va="center", zorder=9)
-ax.scatter([lx + .05], [ly - .13], s=40, c="#FFF6E0", edgecolors="#06182B", lw=.5, zorder=9)
-ax.text(lx + .2, ly - .13, f"Registros de ballena ({len(pres):,})".replace(",", "."), fontsize=10, va="center", zorder=9)
-ax.text(lx - .02, ly - .45, "Densidad de puntos de comparación", fontsize=10, va="center", zorder=9)
-for i in range(6): ax.add_patch(Rectangle((lx - .02 + i * .4, ly - .78), .4, .14, color=cm(i / 5), lw=0, zorder=9))
-ax.text(lx - .02, ly - .88, "pocos", fontsize=8.5, color=SUAVE, va="top", zorder=9)
-ax.text(lx + 2.38, ly - .88, "muchos", fontsize=8.5, color=SUAVE, va="top", ha="right", zorder=9)
+lx, ly = -82.35, 2.15
+ax.add_patch(FancyBboxPatch((lx - .08, 1.5), 1.95, 0.98, boxstyle="round,pad=0,rounding_size=0.04", fc=FONDO, ec=REJILLA, lw=1, alpha=0.92, zorder=8))
+ax.text(lx, ly + .2, "Convenciones", fontsize=9.5, fontweight="bold", va="center", zorder=9)
+ax.scatter([lx + .04], [ly - .01], s=22, c="#FFF6E0", edgecolors="#06182B", lw=.5, zorder=9)
+ax.text(lx + .14, ly - .01, f"Registros de ballena ({len(pres):,})".replace(",", "."), fontsize=8.5, va="center", zorder=9)
+ax.text(lx, ly - .22, "Densidad de puntos de comparación", fontsize=8.5, va="center", zorder=9)
+for i in range(6): ax.add_patch(Rectangle((lx + i * .29, ly - .46), .29, .1, color=cm(i / 5), lw=0, zorder=9))
+ax.text(lx, ly - .52, "pocos", fontsize=7.5, color=SUAVE, va="top", zorder=9)
+ax.text(lx + 1.74, ly - .52, "muchos", fontsize=7.5, color=SUAVE, va="top", ha="right", zorder=9)
+def justificado(fig, texto, x0, x1, y, size, color, interlinea=0.022):
+    """Escribe un párrafo justificado entre x0 y x1 (coordenadas de la figura)."""
+    r = fig.canvas.get_renderer(); W = fig.bbox.width
+    def ancho(t):
+        m = fig.text(0, 0, t, fontsize=size)
+        w = m.get_window_extent(r).width / W
+        m.remove()
+        return w
+    palabras = texto.split(); esp = ancho("a a") - 2 * ancho("a")
+    medidas = {w: ancho(w) for w in palabras}
+    lineas, actual = [], []
+    for w in palabras:
+        if actual and sum(medidas[p] for p in actual + [w]) + esp * len(actual) > x1 - x0:
+            lineas.append(actual); actual = []
+        actual.append(w)
+    lineas.append(actual)
+    for k, ln in enumerate(lineas):
+        yy = y - k * interlinea
+        if k == len(lineas) - 1 or len(ln) == 1:
+            fig.text(x0, yy, " ".join(ln), fontsize=size, color=color); continue
+        hueco = (x1 - x0 - sum(medidas[p] for p in ln)) / (len(ln) - 1)
+        x = x0
+        for w in ln:
+            fig.text(x, yy, w, fontsize=size, color=color); x += medidas[w] + hueco
+    return y - (len(lineas) - 1) * interlinea
+
+justificado(fig, "Las yubartas llegan desde el sur de Chile y la Antártida a parir y criar en aguas cálidas, someras y protegidas. "
+            "Para encontrar esas condiciones, el modelo compara sus registros con 10.000 puntos de comparación, ubicados donde hay "
+            "más gente observando, para que la diferencia la explique el mar y no el turismo.",
+            0.06, 0.94, 0.925, 11, SUAVE)
 fig.text(0.06, 0.955, "Contra qué se compara cada ballena", fontsize=19, fontweight="bold")
-fig.text(0.06, 0.925, "Para saber qué mar prefieren las ballenas, el modelo compara sus registros con 10.000 puntos de comparación.", fontsize=11, color=SUAVE)
-fig.text(0.06, 0.903, "Esos puntos se ubican donde hay más gente observando, para que la diferencia la explique el mar y no el turismo.", fontsize=11, color=SUAVE)
 fig.text(0.06, 0.025, "Fuentes: GBIF.org, OBIS, Natural Earth. Elaboración: Tatiana Zamudio.", fontsize=8.5, color=SUAVE)
 plt.savefig(OUT, facecolor=FONDO)
