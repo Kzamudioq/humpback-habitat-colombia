@@ -45,7 +45,7 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 
 ## Próximo módulo: ballenas desde el espacio
 
-Además del modelo de hábitat, el proyecto tendrá un módulo de visión por computador para detectar ballenas en imágenes satelitales de muy alta resolución. Para entrenarlo se usa el *Whales from Space dataset* (Cubaynes y Fretwell, 2022): 633 objetos de ballena de cuatro especies, marcados a mano sobre 6.300 km² de imágenes de Maxar tomadas entre 2006 y 2017. El acceso a los recortes se solicitó al UK Polar Data Centre y fue aprobado.
+Además del modelo de hábitat, el proyecto tendrá un módulo de visión por computador para detectar ballenas en imágenes satelitales de muy alta resolución. Para entrenarlo se usa el *Whales from Space dataset* (Cubaynes y Fretwell, 2022): 633 objetos de ballena de cuatro especies, marcados a mano sobre 6.300 km² de imágenes de Maxar tomadas entre 2006 y 2017, cada uno con un nivel de confianza (segura, probable o posible). El acceso a los recortes se solicitó al UK Polar Data Centre y fue aprobado.
 
 ![Una ballena de cada especie vista desde satélite](docs/img/ballenas_desde_el_espacio.png)
 
@@ -53,7 +53,7 @@ Además del modelo de hábitat, el proyecto tendrá un módulo de visión por co
 
 **Sobre los datos.** Las imágenes están protegidas por el copyright de Maxar Technologies y se distribuyen bajo su licencia de grupo, así que **no se incluyen en este repositorio**: aquí solo se muestran estos dos recortes como referencia, con su crédito. Quien quiera reproducir el módulo debe solicitar el acceso al UK Polar Data Centre.
 
-**Fuentes.** Imagery courtesy of Maxar Technologies. Recortes: Cubaynes, H. y Fretwell, P. (2023), *Whales from Space Database: Image chips*, UK Polar Data Centre, registro GB/NERC/BAS/PDC/01592. Descripción del dataset: Cubaynes y Fretwell (2022), *Scientific Data*, 9, 245.
+**Fuentes.** Imagery courtesy of Maxar Technologies. Recortes: Cubaynes, H. y Fretwell, P. (2021), *Whales from Space Database: Image chips* (versión 1.0), NERC EDS UK Polar Data Centre, https://doi.org/10.5285/90fab89e-5d07-4d5c-b619-60799a4d09f8. Descripción del dataset: Cubaynes y Fretwell (2022), *Scientific Data*, 9, 245.
 
 ## Fases
 
@@ -99,7 +99,7 @@ Cada registro conserva el conjunto de datos de origen; al publicar resultados se
 - Avila, I. C., Dormann, C. F., García, C., Payán, L. F. y Zorrilla, M. X. (2020). Humpback whales extend their stay in a breeding ground in the Tropical Eastern Pacific. *ICES Journal of Marine Science*, 77(1), 109-118.
 - IUCN MMPATF. Gorgona-Tribugá-Malpelo IMMA, factsheet.
 - Cubaynes, H. y Fretwell, P. (2022). Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. *Scientific Data*, 9, 245. https://doi.org/10.1038/s41597-022-01377-4
-- Cubaynes, H. y Fretwell, P. (2023). Whales from Space Database: Image chips. NERC EDS UK Polar Data Centre. GB/NERC/BAS/PDC/01592.
+- Cubaynes, H. y Fretwell, P. (2021). Whales from Space Database: Image chips (versión 1.0) [conjunto de datos]. NERC EDS UK Polar Data Centre. https://doi.org/10.5285/90fab89e-5d07-4d5c-b619-60799a4d09f8
 - Palacios, D. M. et al. (2012). Cetacean distribution and relative abundance in Colombia's Pacific EEZ. *Journal of Cetacean Research and Management*.
 
 ## Autora
