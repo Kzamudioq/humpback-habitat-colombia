@@ -4,7 +4,7 @@ Lee data/avistamientos_pacifico_co.csv y escribe docs/img/tiempo_avistamientos.p
 Uso, desde la raíz del repo:  python scripts/tiempo_avistamientos.py
 """
 import sys, numpy as np, pandas as pd, matplotlib.pyplot as plt
-from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import FancyBboxPatch, Rectangle
 from matplotlib.colors import LinearSegmentedColormap
 
 CSV = sys.argv[1] if len(sys.argv) > 1 else "data/avistamientos_pacifico_co.csv"
@@ -24,16 +24,16 @@ def tabla(col, idx):
         if c not in t: t[c] = 0
     return t
 
-def barra(ax, x, y0, h, w, cmap, ymax):
-    """Barra con degradado vertical y esquinas redondeadas."""
+def barra(ax, x, y0, h, w, cmap, ymax, borde):
+    """Barra recta con degradado vertical y contorno."""
     if h <= 0: return
-    caja = FancyBboxPatch((x - w / 2, y0), w, h, boxstyle="round,pad=0,rounding_size=0.18",
-                          mutation_aspect=ymax / 12, fc="none", ec="none", zorder=3)
+    caja = Rectangle((x - w / 2, y0), w, h, fc="none", ec="none", zorder=3)
     ax.add_patch(caja)
     grad = np.linspace(0, 1, 64).reshape(-1, 1)   # cada barra con su degradado completo
     im = ax.imshow(grad, cmap=cmap, vmin=0, vmax=1, extent=(x - w / 2, x + w / 2, y0, y0 + h),
                    origin="lower", aspect="auto", zorder=3, interpolation="bicubic")
     im.set_clip_path(caja)
+    ax.add_patch(Rectangle((x - w / 2, y0), w, h, fc="none", ec=borde, lw=1.1, zorder=4))
 
 def estilo(ax, ymax):
     ax.set_facecolor(PANEL)
@@ -51,8 +51,8 @@ def leyenda(ax, x, y):
     for i, (n, c) in enumerate([(f"Avistamientos ({int(df.tipo.eq('avistamiento').sum())})", "#4FC4CC"),
                                 (f"Telemetría satelital ({int(df.tipo.eq('telemetría').sum())})", "#FF8A5B")]):
         yy = y - 0.055 - i * 0.075
-        ax.add_patch(FancyBboxPatch((x + 0.018, yy - 0.018), 0.018, 0.036, boxstyle="round,pad=0,rounding_size=0.006",
-                                    transform=ax.transAxes, fc=c, ec="none", zorder=9))
+        ax.add_patch(Rectangle((x + 0.018, yy - 0.018), 0.018, 0.036, transform=ax.transAxes, fc=c,
+                              ec=("#C9FBF4" if i == 0 else "#FFE1CC"), lw=1.1, zorder=9))
         ax.text(x + 0.048, yy, n, transform=ax.transAxes, fontsize=11, color=TEXTO, va="center", zorder=9)
 
 plt.rcParams.update({"font.family": "DejaVu Sans", "text.color": TEXTO})
@@ -66,8 +66,8 @@ ymax = t.sum(axis=1).max() * 1.12
 estilo(a1, ymax)
 for a in años:
     av, te = t.loc[a, "avistamiento"], t.loc[a, "telemetría"]
-    barra(a1, a, 0, av, 0.74, AV, ymax)
-    barra(a1, a, av, te, 0.74, TEL, ymax)
+    barra(a1, a, 0, av, 0.74, AV, ymax, "#C9FBF4")
+    barra(a1, a, av, te, 0.74, TEL, ymax, "#FFE1CC")
     if av + te >= 150:
         a1.text(a, av + te + ymax * 0.015, f"{int(av + te)}", ha="center", fontsize=10.5, color=TEXTO, fontweight="bold")
 a1.set_xlim(años[0] - 1, años[-1] + 1)
@@ -84,8 +84,8 @@ a2.axvspan(4.5, 12.5, color="#0F3452", lw=0, zorder=1)
 a2.text(8.5, ymax2 * 0.95, "Temporada de cría", ha="center", fontsize=10.5, color=SUAVE, zorder=4)
 for mes in range(1, 13):
     av, te = m.loc[mes, "avistamiento"], m.loc[mes, "telemetría"]
-    barra(a2, mes, 0, av, 0.7, AV, ymax2)
-    barra(a2, mes, av, te, 0.7, TEL, ymax2)
+    barra(a2, mes, 0, av, 0.7, AV, ymax2, "#C9FBF4")
+    barra(a2, mes, av, te, 0.7, TEL, ymax2, "#FFE1CC")
 a2.set_xticks(range(1, 13), ["E", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"])
 a2.set_xlim(0.4, 12.6)
 a2.text(0, 1.13, "Registros por mes", transform=a2.transAxes, fontsize=17, fontweight="bold")

@@ -1,12 +1,14 @@
 # humpback-habitat-colombia
 
+<div align="justify">
+
 Modelo abierto y reproducible del hábitat estacional de la ballena jorobada (*Megaptera novaeangliae*) en el Pacífico colombiano, construido con avistamientos de GBIF y OBIS y variables oceánicas de Earth Engine, con corrección del sesgo de muestreo turístico.
 
 ## Contexto
 
 La población del Hemisferio Sur (stock G de la IWC) llega al Pacífico colombiano entre mayo y diciembre para reproducirse y criar. El área Gorgona-Tribugá-Malpelo está reconocida como Área Importante para Mamíferos Marinos (IMMA).
 
-Casi todos los registros públicos vienen de zonas de avistamiento turístico (Bahía Solano, Nuquí, Bahía Málaga, Gorgona). Un modelo que no corrija ese sesgo termina mostrando dónde hay lanchas, no dónde hay ballenas. Este repositorio busca resolver eso con código abierto y que se actualice cada temporada.
+Casi todos los registros públicos vienen de zonas de avistamiento turístico (Bahía Solano, Nuquí, Bahía Málaga, Gorgona). Un modelo que no corrija ese sesgo termina señalando los lugares donde más gente sale a buscar ballenas, en vez de los lugares que las ballenas prefieren. Este repositorio busca resolver eso con código abierto y que se actualice cada temporada.
 
 ## Fase 0: qué datos hay
 
@@ -21,7 +23,7 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 **Qué muestra.** Cada punto blanco es un avistamiento y cada punto coral es una posición de telemetría satelital. Los círculos punteados marcan 25 km alrededor de los cuatro sitios de avistamiento turístico (Bahía Solano, Nuquí y Tribugá, Bahía Málaga y Gorgona), con el número de registros que cae dentro de cada uno. El fondo es la profundidad del mar: turquesa en la plataforma continental (menos de 200 m) y azul noche en las cuencas de hasta 5.000 m.
 
 **Cómo leerlo.**
-- **Sesgo turístico.** El 66 % de los registros cae dentro de los círculos; solo Bahía Solano reúne 586. Esto refleja dónde salen las lanchas, no solo dónde están las ballenas.
+- **Sesgo turístico.** El 66 % de los registros cae dentro de los círculos; solo Bahía Solano reúne 586. Eso no quiere decir que allí haya más ballenas, sino que allí hay más personas mirando: una ballena solo queda registrada si alguien la ve y sube la foto, y casi todas las lanchas de avistamiento salen de esos cuatro puertos. Mar adentro puede haber ballenas que nadie registra.
 - **La plataforma importa.** El 92 % de los avistamientos y el 56 % de la telemetría están sobre fondos de menos de 200 m. La telemetría no depende de las lanchas, así que esa preferencia por aguas someras parece real.
 - **La telemetría dibuja rutas.** Las ballenas marcadas en 2013 bajan pegadas a la costa hacia Ecuador. Son los registros más valiosos para corregir el sesgo.
 - Mar adentro hay muy pocos registros, casi todos alrededor de la isla de Malpelo.
@@ -87,3 +89,5 @@ Cada registro conserva el conjunto de datos de origen; al publicar resultados se
 ## Autora
 
 Tatiana Zamudio, ingeniera topográfica, magíster en Inteligencia Artificial.
+
+</div>
