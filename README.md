@@ -8,11 +8,23 @@ La población del Hemisferio Sur (stock G de la IWC) llega al Pacífico colombia
 
 Casi todos los registros públicos vienen de zonas de avistamiento turístico (Bahía Solano, Nuquí, Bahía Málaga, Gorgona). Un modelo que no corrija ese sesgo termina mostrando dónde hay lanchas, no dónde hay ballenas. Este repositorio busca resolver eso con código abierto y que se actualice cada temporada.
 
+## Fase 0: qué datos hay
+
+![Mapa de avistamientos](docs/img/mapa_avistamientos.png)
+
+![Registros por año y por mes](docs/img/tiempo_avistamientos.png)
+
+- **1.633 registros útiles** (fecha, coordenadas, en el mar y sin duplicados): 1.631 de GBIF y 2 de OBIS. Supera el umbral de 300, así que el modelo sigue en el Pacífico colombiano.
+- **Dos tipos de dato que no se mezclan.** 1.065 son avistamientos (Happywhale, iNaturalist, cruceros de la NOAA y proyectos locales) y 568 son telemetría satelital de 2013: pocas ballenas marcadas, registradas muchas veces. El pico de 2013 en la gráfica es esa telemetría, no un año con más ballenas.
+- **Sesgo turístico confirmado.** El 66 % de los registros cae a menos de 25 km de Bahía Solano, Nuquí y Tribugá, Bahía Málaga o Gorgona; solo Bahía Solano reúne 586.
+- **La curva mensual sigue la temporada turística.** Julio concentra unos 820 registros y mayo casi ninguno, aunque las ballenas llegan hacia finales de mayo (Avila et al., 2020).
+- **Lo más valioso para el modelo** son los registros lejos de los sitios turísticos: la telemetría, que recorre la costa hacia el sur, y los cruceros científicos con esfuerzo controlado.
+
 ## Fases
 
 | Fase | Qué hace | Estado |
 |---|---|---|
-| 0 | Descarga y conteo de avistamientos (GBIF, OBIS): mapa, año, mes, sesgo | En curso |
+| 0 | Descarga y conteo de avistamientos (GBIF, OBIS): mapa, año, mes, sesgo | Hecha |
 | 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) | Pendiente |
 | 2 | Modelo de hábitat con fondo de muestreo ponderado por esfuerzo | Pendiente |
 | 3 | Mapa estacional automatizado con GitHub Actions | Pendiente |
@@ -23,8 +35,10 @@ Criterio de la fase 0: con 300 registros útiles o más (fecha, coordenadas, en 
 
 ```
 notebooks/
-  01_fase0_datos.ipynb   descarga, limpieza, mapa y gráficas
-data/                    datos descargados (no se versionan)
+  01_fase0_datos.ipynb       descarga, limpieza, mapa y gráficas
+scripts/
+  mapa_avistamientos.py      mapa del README a partir del CSV
+data/                        datos descargados (no se versionan)
 docs/img/                figuras para este README
 ```
 
