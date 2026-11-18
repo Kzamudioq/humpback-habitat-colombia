@@ -25,7 +25,7 @@ Casi todos los registros públicos vienen de zonas de avistamiento turístico (B
 | Fase | Qué hace | Estado |
 |---|---|---|
 | 0 | Descarga y conteo de avistamientos (GBIF, OBIS): mapa, año, mes, sesgo | Hecha |
-| 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) | Pendiente |
+| 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) y puntos de fondo corregidos por esfuerzo | En curso |
 | 2 | Modelo de hábitat con fondo de muestreo ponderado por esfuerzo | Pendiente |
 | 3 | Mapa estacional automatizado con GitHub Actions | Pendiente |
 
@@ -36,6 +36,7 @@ Criterio de la fase 0: con 300 registros útiles o más (fecha, coordenadas, en 
 ```
 notebooks/
   01_fase0_datos.ipynb       descarga, limpieza, mapa y gráficas
+  02_fase1_variables.ipynb   variables del mar en Earth Engine y puntos de fondo
 scripts/
   mapa_avistamientos.py      mapa del README a partir del CSV
 data/                        datos descargados (no se versionan)
@@ -44,7 +45,8 @@ docs/img/                figuras para este README
 
 ## Cómo correrlo
 
-Abre `notebooks/01_fase0_datos.ipynb` en Google Colab y ejecuta todas las celdas. No necesita GPU.
+1. `notebooks/01_fase0_datos.ipynb` en Google Colab: descarga los avistamientos. No necesita GPU.
+2. `notebooks/02_fase1_variables.ipynb`: requiere una cuenta de Earth Engine con un proyecto de Google Cloud.
 
 ## Fuentes de datos
 
