@@ -43,6 +43,36 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 
 **Fuentes.** Registros: [GBIF.org](https://www.gbif.org) y [OBIS](https://obis.org). Los conjuntos de datos con más registros son Happywhale (932), una campaña de telemetría satelital de 2013 (567), iNaturalist (92) y los cruceros de mamíferos marinos de la NOAA (SWFSC, 1987-2000). Figura generada con `scripts/tiempo_avistamientos.py`.
 
+## Fase 1: las condiciones del mar donde están las ballenas
+
+El notebook `notebooks/02_fase1_variables.ipynb` le asigna a cada registro las condiciones del mar en ese lugar y en ese mes, usando Google Earth Engine: temperatura superficial (NOAA OISST), clorofila (NASA MODIS-Aqua, promedio del mes entre 2003 y 2024), profundidad y pendiente del fondo (NOAA ETOPO1) y distancia a la costa (Natural Earth). Antes se adelgazaron los registros a uno por celda de unos 2 km y por mes, para que una misma ballena registrada muchas veces no pese de más: quedan 1.186 presencias, 689 avistamientos y 497 posiciones de telemetría.
+
+### Puntos de fondo corregidos por esfuerzo
+
+![Superficie de esfuerzo y puntos de fondo](docs/img/fase1_fondo.png)
+
+**Qué muestra.** El modelo necesita comparar los lugares con ballenas contra el resto del mar. Para eso se generan 10.000 puntos de fondo (puntos grises). La clave es que no se reparten al azar: el 80 % sigue la superficie de esfuerzo (el brillo turquesa), que mide dónde se concentran los registros, y el 20 % se reparte por todo el mar. Así, cerca de Bahía Solano hay muchos puntos de fondo y mar adentro pocos, igual que los registros.
+
+**Por qué importa.** Si los puntos de fondo se repartieran al azar, el modelo aprendería algo obvio y falso: que las ballenas están cerca de los puertos turísticos. Con el fondo corregido, compara sitios con un esfuerzo de observación parecido y aprende qué condiciones del mar prefieren las ballenas (Phillips et al., 2009).
+
+**Fuentes.** Registros: GBIF.org y OBIS. Línea de costa: Natural Earth. Figura generada con `scripts/fase1_figuras.py`.
+
+### Perfil ambiental de la yubarta en el Pacífico colombiano
+
+![Variables del mar en avistamientos, telemetría y fondo](docs/img/fase1_variables.png)
+
+**Qué muestra.** Para cada variable, la curva gris es el fondo, la turquesa son los avistamientos y la coral es la telemetría. Las líneas punteadas son las medianas, y sus valores aparecen arriba a la derecha de cada panel. Donde las curvas se separan, la variable ayuda a explicar dónde están las ballenas.
+
+**Cómo leerlo.**
+- **Aguas someras y cerca de la costa.** Es la señal más fuerte. La mediana de profundidad es 42 m en los avistamientos y 118 m en la telemetría, frente a 1.387 m en el fondo; la distancia a la costa es 3 km y 18 km frente a 38 km. Que la telemetría, que no depende de las lanchas, muestre lo mismo indica que la preferencia es real.
+- **Más clorofila.** Las ballenas están en aguas con unas dos a tres veces más clorofila que el fondo (medianas de 0,6 a 0,8 mg/m³ frente a 0,25 mg/m³). Ojo: cerca de la costa el satélite puede confundir sedimentos de los ríos con clorofila, y esta variable está muy ligada a la distancia a la costa.
+- **La temperatura no es concluyente.** Los avistamientos están en aguas más cálidas (28,3 °C) y la telemetría en más frías (26,7 °C) que el fondo (27,4 °C). La diferencia viene de las fechas: la telemetría es casi toda de julio de 2013. El modelo tendrá que separar el efecto del año y del mes.
+- **La pendiente del fondo casi no cambia** entre los tres grupos.
+
+**Lo que esto implica para la fase 2.** Profundidad, distancia a la costa y clorofila están correlacionadas entre sí: describen casi lo mismo, "agua costera". El modelo tiene que manejar esa correlación para no contar la misma señal tres veces.
+
+**Fuentes.** Temperatura: NOAA OISST v2.1. Clorofila: NASA OceanColor MODIS-Aqua L3SMI. Batimetría: NOAA ETOPO1. Todas consultadas en Google Earth Engine. Costa: Natural Earth. Registros: GBIF.org y OBIS. Figura generada con `scripts/fase1_figuras.py`.
+
 ## Próximo módulo: ballenas desde el espacio
 
 Además del modelo de hábitat, el proyecto tendrá un módulo de visión por computador para detectar ballenas en imágenes satelitales de muy alta resolución. Para entrenarlo se usa el *Whales from Space dataset* (Cubaynes y Fretwell, 2022): 633 objetos de ballena de cuatro especies, marcados a mano sobre 6.300 km² de imágenes de Maxar tomadas entre 2006 y 2017, cada uno con un nivel de confianza (segura, probable o posible). El acceso a los recortes se solicitó al UK Polar Data Centre y fue aprobado.
@@ -60,8 +90,8 @@ Además del modelo de hábitat, el proyecto tendrá un módulo de visión por co
 | Fase | Qué hace | Estado |
 |---|---|---|
 | 0 | Descarga y conteo de avistamientos (GBIF, OBIS): mapa, año, mes, sesgo | Hecha |
-| 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) y puntos de fondo corregidos por esfuerzo | En curso |
-| 2 | Modelo de hábitat con fondo de muestreo ponderado por esfuerzo | Pendiente |
+| 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) y puntos de fondo corregidos por esfuerzo | Hecha |
+| 2 | Modelo de hábitat con fondo de muestreo ponderado por esfuerzo | En curso |
 | 3 | Mapa estacional automatizado con GitHub Actions | Pendiente |
 | 4 | Detección de ballenas en imágenes satelitales (Whales from Space) | Datos recibidos |
 
@@ -76,6 +106,7 @@ notebooks/
 scripts/
   mapa_avistamientos.py      mapa del README: avistamientos sobre la batimetría
   tiempo_avistamientos.py    gráficas de registros por año y por mes
+  fase1_figuras.py           figuras de la fase 1: fondo y variables del mar
 data/                        datos descargados (no se versionan)
 docs/img/                figuras para este README
 ```
@@ -100,6 +131,7 @@ Cada registro conserva el conjunto de datos de origen; al publicar resultados se
 - IUCN MMPATF. Gorgona-Tribugá-Malpelo IMMA, factsheet.
 - Cubaynes, H. y Fretwell, P. (2022). Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. *Scientific Data*, 9, 245. https://doi.org/10.1038/s41597-022-01377-4
 - Cubaynes, H. y Fretwell, P. (2021). Whales from Space Database: Image chips (versión 1.0) [conjunto de datos]. NERC EDS UK Polar Data Centre. https://doi.org/10.5285/90fab89e-5d07-4d5c-b619-60799a4d09f8
+- Phillips, S. J. et al. (2009). Sample selection bias and presence-only distribution models: implications for background and pseudo-absence data. *Ecological Applications*, 19(1), 181-197.
 - Palacios, D. M. et al. (2012). Cetacean distribution and relative abundance in Colombia's Pacific EEZ. *Journal of Cetacean Research and Management*.
 
 ## Autora
