@@ -17,7 +17,8 @@ Casi todos los registros públicos vienen de zonas de avistamiento turístico (B
 - **1.633 registros útiles** (fecha, coordenadas, en el mar y sin duplicados): 1.631 de GBIF y 2 de OBIS. Supera el umbral de 300, así que el modelo sigue en el Pacífico colombiano.
 - **Dos tipos de dato que no se mezclan.** 1.065 son avistamientos (Happywhale, iNaturalist, cruceros de la NOAA y proyectos locales) y 568 son telemetría satelital de 2013: pocas ballenas marcadas, registradas muchas veces. El pico de 2013 en la gráfica es esa telemetría, no un año con más ballenas.
 - **Sesgo turístico confirmado.** El 66 % de los registros cae a menos de 25 km de Bahía Solano, Nuquí y Tribugá, Bahía Málaga o Gorgona; solo Bahía Solano reúne 586.
-- **La curva mensual sigue la temporada turística.** Julio concentra unos 820 registros y mayo casi ninguno, aunque las ballenas llegan hacia finales de mayo (Avila et al., 2020).
+- **La curva mensual sigue la temporada turística.** La mitad de los registros cae en julio, sobre todo por la telemetría; los avistamientos se reparten de julio a octubre y mayo casi no tiene, aunque las ballenas llegan hacia finales de mayo (Avila et al., 2020).
+- **La plataforma importa.** El 92 % de los avistamientos y el 56 % de los puntos de telemetría están sobre fondos de menos de 200 m de profundidad (batimetría de Natural Earth). La telemetría no depende de las lanchas, así que esa preferencia por aguas someras parece real y no solo efecto del turismo.
 - **Lo más valioso para el modelo** son los registros lejos de los sitios turísticos: la telemetría, que recorre la costa hacia el sur, y los cruceros científicos con esfuerzo controlado.
 
 ## Fases
@@ -38,7 +39,8 @@ notebooks/
   01_fase0_datos.ipynb       descarga, limpieza, mapa y gráficas
   02_fase1_variables.ipynb   variables del mar en Earth Engine y puntos de fondo
 scripts/
-  mapa_avistamientos.py      mapa del README a partir del CSV
+  mapa_avistamientos.py      mapa del README: avistamientos sobre la batimetría
+  tiempo_avistamientos.py    gráficas de registros por año y por mes
 data/                        datos descargados (no se versionan)
 docs/img/                figuras para este README
 ```
@@ -52,7 +54,7 @@ docs/img/                figuras para este README
 
 - GBIF, Global Biodiversity Information Facility: https://www.gbif.org
 - OBIS, Ocean Biodiversity Information System: https://obis.org
-- Natural Earth (línea de costa): https://www.naturalearthdata.com
+- Natural Earth (línea de costa y batimetría): https://www.naturalearthdata.com
 
 Cada registro conserva el conjunto de datos de origen; al publicar resultados se citan los conjuntos usados según la licencia de cada uno.
 
