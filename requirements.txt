@@ -1,0 +1,7 @@
+requests
+pandas
+numpy
+matplotlib
+shapely>=2.0
+cartopy
+folium
