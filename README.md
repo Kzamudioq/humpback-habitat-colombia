@@ -43,6 +43,18 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 
 **Fuentes.** Registros: [GBIF.org](https://www.gbif.org) y [OBIS](https://obis.org). Los conjuntos de datos con más registros son Happywhale (932), una campaña de telemetría satelital de 2013 (567), iNaturalist (92) y los cruceros de mamíferos marinos de la NOAA (SWFSC, 1987-2000). Figura generada con `scripts/tiempo_avistamientos.py`.
 
+## Próximo módulo: ballenas desde el espacio
+
+Además del modelo de hábitat, el proyecto tendrá un módulo de visión por computador para detectar ballenas en imágenes satelitales de muy alta resolución. Para entrenarlo se usa el *Whales from Space dataset* (Cubaynes y Fretwell, 2022): 633 objetos de ballena de cuatro especies, marcados a mano sobre 6.300 km² de imágenes de Maxar tomadas entre 2006 y 2017. El acceso a los recortes se solicitó al UK Polar Data Centre y fue aprobado.
+
+![Una ballena de cada especie vista desde satélite](docs/img/ballenas_desde_el_espacio.png)
+
+**Qué muestra.** Un recorte por cada una de las cuatro especies del dataset: ballena jorobada (Maui, Hawái), ballena franca austral (Península Valdés, Argentina), ballena gris (Laguna San Ignacio, México) y rorcual común (Santuario Pelagos, mar de Liguria). Las imágenes vienen de los satélites WorldView-2 y WorldView-3, con 30 a 50 cm por píxel. A esa resolución una jorobada de 14 m ocupa alrededor de 45 píxeles: suficiente para que un modelo la reconozca, como ocurre con las sombrillas en [urbanvendor-vision](https://github.com/Kzamudioq/urbanvendor-vision). El color del agua cambia mucho entre sitios y sensores, y esa variedad es justamente lo que el modelo tiene que aprender a ignorar.
+
+**Sobre los datos.** Las imágenes están protegidas por el copyright de Maxar Technologies y se distribuyen bajo su licencia de grupo, así que **no se incluyen en este repositorio**: aquí solo se muestran estos dos recortes como referencia, con su crédito. Quien quiera reproducir el módulo debe solicitar el acceso al UK Polar Data Centre.
+
+**Fuentes.** Imagery courtesy of Maxar Technologies. Recortes: Cubaynes, H. y Fretwell, P. (2023), *Whales from Space Database: Image chips*, UK Polar Data Centre, registro GB/NERC/BAS/PDC/01592. Descripción del dataset: Cubaynes y Fretwell (2022), *Scientific Data*, 9, 245.
+
 ## Fases
 
 | Fase | Qué hace | Estado |
@@ -51,6 +63,7 @@ Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces 
 | 1 | Variables oceánicas en Earth Engine (temperatura, clorofila, batimetría) y puntos de fondo corregidos por esfuerzo | En curso |
 | 2 | Modelo de hábitat con fondo de muestreo ponderado por esfuerzo | Pendiente |
 | 3 | Mapa estacional automatizado con GitHub Actions | Pendiente |
+| 4 | Detección de ballenas en imágenes satelitales (Whales from Space) | Datos recibidos |
 
 Criterio de la fase 0: con 300 registros útiles o más (fecha, coordenadas, en el mar y sin duplicados) se sigue con el modelo en el Pacífico colombiano. Con menos, la zona se amplía al rango de la población G (Panamá, Costa Rica, Ecuador).
 
@@ -77,6 +90,7 @@ docs/img/                figuras para este README
 - GBIF, Global Biodiversity Information Facility: https://www.gbif.org
 - OBIS, Ocean Biodiversity Information System: https://obis.org
 - Natural Earth (línea de costa y batimetría): https://www.naturalearthdata.com
+- Whales from Space Database, UK Polar Data Centre (acceso por solicitud; imágenes © Maxar Technologies, no incluidas en el repositorio)
 
 Cada registro conserva el conjunto de datos de origen; al publicar resultados se citan los conjuntos usados según la licencia de cada uno.
 
@@ -84,6 +98,8 @@ Cada registro conserva el conjunto de datos de origen; al publicar resultados se
 
 - Avila, I. C., Dormann, C. F., García, C., Payán, L. F. y Zorrilla, M. X. (2020). Humpback whales extend their stay in a breeding ground in the Tropical Eastern Pacific. *ICES Journal of Marine Science*, 77(1), 109-118.
 - IUCN MMPATF. Gorgona-Tribugá-Malpelo IMMA, factsheet.
+- Cubaynes, H. y Fretwell, P. (2022). Whales from space dataset, an annotated satellite image dataset of whales for training machine learning models. *Scientific Data*, 9, 245. https://doi.org/10.1038/s41597-022-01377-4
+- Cubaynes, H. y Fretwell, P. (2023). Whales from Space Database: Image chips. NERC EDS UK Polar Data Centre. GB/NERC/BAS/PDC/01592.
 - Palacios, D. M. et al. (2012). Cetacean distribution and relative abundance in Colombia's Pacific EEZ. *Journal of Cetacean Research and Management*.
 
 ## Autora
