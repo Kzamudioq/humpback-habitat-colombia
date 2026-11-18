@@ -10,16 +10,36 @@ Casi todos los registros públicos vienen de zonas de avistamiento turístico (B
 
 ## Fase 0: qué datos hay
 
+El primer paso fue responder una pregunta simple: ¿hay suficientes registros públicos de ballena jorobada en el Pacífico colombiano para construir un modelo? El notebook `notebooks/01_fase0_datos.ipynb` descarga todos los registros de GBIF y OBIS dentro de la zona de estudio (82,5° O a 77° O, 1,4° N a 7,4° N), quita los que no tienen fecha, los duplicados entre las dos fuentes y los que caen en tierra.
+
+Resultado: **1.633 registros útiles** (1.631 de GBIF y 2 de OBIS), cinco veces el mínimo de 300 que se fijó para seguir. Pero los datos no son homogéneos, y las dos figuras siguientes muestran por qué.
+
+### Dónde están los registros
+
 ![Mapa de avistamientos](docs/img/mapa_avistamientos.png)
+
+**Qué muestra.** Cada punto blanco es un avistamiento y cada punto coral es una posición de telemetría satelital. Los círculos punteados marcan 25 km alrededor de los cuatro sitios de avistamiento turístico (Bahía Solano, Nuquí y Tribugá, Bahía Málaga y Gorgona), con el número de registros que cae dentro de cada uno. El fondo es la profundidad del mar: turquesa en la plataforma continental (menos de 200 m) y azul noche en las cuencas de hasta 5.000 m.
+
+**Cómo leerlo.**
+- **Sesgo turístico.** El 66 % de los registros cae dentro de los círculos; solo Bahía Solano reúne 586. Esto refleja dónde salen las lanchas, no solo dónde están las ballenas.
+- **La plataforma importa.** El 92 % de los avistamientos y el 56 % de la telemetría están sobre fondos de menos de 200 m. La telemetría no depende de las lanchas, así que esa preferencia por aguas someras parece real.
+- **La telemetría dibuja rutas.** Las ballenas marcadas en 2013 bajan pegadas a la costa hacia Ecuador. Son los registros más valiosos para corregir el sesgo.
+- Mar adentro hay muy pocos registros, casi todos alrededor de la isla de Malpelo.
+
+**Fuentes.** Registros: [GBIF.org](https://www.gbif.org) y [OBIS](https://obis.org), descargados con sus API públicas. Línea de costa y batimetría: [Natural Earth](https://www.naturalearthdata.com), escala 1:10 millones. Figura generada con `scripts/mapa_avistamientos.py`.
+
+### Cuándo se tomaron
 
 ![Registros por año y por mes](docs/img/tiempo_avistamientos.png)
 
-- **1.633 registros útiles** (fecha, coordenadas, en el mar y sin duplicados): 1.631 de GBIF y 2 de OBIS. Supera el umbral de 300, así que el modelo sigue en el Pacífico colombiano.
-- **Dos tipos de dato que no se mezclan.** 1.065 son avistamientos (Happywhale, iNaturalist, cruceros de la NOAA y proyectos locales) y 568 son telemetría satelital de 2013: pocas ballenas marcadas, registradas muchas veces. El pico de 2013 en la gráfica es esa telemetría, no un año con más ballenas.
-- **Sesgo turístico confirmado.** El 66 % de los registros cae a menos de 25 km de Bahía Solano, Nuquí y Tribugá, Bahía Málaga o Gorgona; solo Bahía Solano reúne 586.
-- **La curva mensual sigue la temporada turística.** La mitad de los registros cae en julio, sobre todo por la telemetría; los avistamientos se reparten de julio a octubre y mayo casi no tiene, aunque las ballenas llegan hacia finales de mayo (Avila et al., 2020).
-- **La plataforma importa.** El 92 % de los avistamientos y el 56 % de los puntos de telemetría están sobre fondos de menos de 200 m de profundidad (batimetría de Natural Earth). La telemetría no depende de las lanchas, así que esa preferencia por aguas someras parece real y no solo efecto del turismo.
-- **Lo más valioso para el modelo** son los registros lejos de los sitios turísticos: la telemetría, que recorre la costa hacia el sur, y los cruceros científicos con esfuerzo controlado.
+**Qué muestra.** A la izquierda, los registros por año; a la derecha, por mes. En las dos, el turquesa son avistamientos y el coral es telemetría satelital, apilados. La franja más clara en la gráfica mensual marca la temporada de cría, de mayo a diciembre.
+
+**Cómo leerlo.**
+- **El pico de 2013 no es un año con más ballenas.** Son 568 posiciones de telemetría de pocos animales marcados, registrados muchas veces. Para el modelo se tratan aparte.
+- **Los avistamientos despegan desde 2016**, cuando plataformas de ciencia ciudadana como Happywhale e iNaturalist empiezan a recibir fotos de turistas y operadores. En 2020 casi no hay registros.
+- **La curva mensual sigue la temporada turística.** La mitad de los registros cae en julio, sobre todo por la telemetría; los avistamientos se reparten de julio a octubre. Mayo casi no tiene registros, aunque las ballenas llegan hacia finales de mayo (Avila et al., 2020).
+
+**Fuentes.** Registros: [GBIF.org](https://www.gbif.org) y [OBIS](https://obis.org). Los conjuntos de datos con más registros son Happywhale (932), una campaña de telemetría satelital de 2013 (567), iNaturalist (92) y los cruceros de mamíferos marinos de la NOAA (SWFSC, 1987-2000). Figura generada con `scripts/tiempo_avistamientos.py`.
 
 ## Fases
 

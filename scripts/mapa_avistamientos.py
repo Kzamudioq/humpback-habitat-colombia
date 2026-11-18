@@ -68,10 +68,10 @@ for p in getattr(land,"geoms",[land]):
 
 sitios = {"Bahía Solano":(-77.40,6.22),"Nuquí / Tribugá":(-77.35,5.70),"Bahía Málaga":(-77.35,4.05),"Gorgona":(-78.18,2.97)}
 for n,(x,y) in sitios.items():
-    ax.add_patch(Circle((x,y),0.25,fill=False,ls=(0,(3,2)),ec=TEXTO,lw=1,alpha=0.85,zorder=24))
+    ax.add_patch(Circle((x,y),0.25,fill=False,ls=(0,(3,2)),ec=TEXTO,lw=2,alpha=0.95,zorder=24))
 t = df[df.tipo=="telemetría"]; a = df[df.tipo=="avistamiento"]
 ax.scatter(t.lon,t.lat,s=8,c=TEL,alpha=0.7,lw=0,zorder=25)
-ax.scatter(a.lon,a.lat,s=14,c=AV,alpha=0.75,lw=0.3,edgecolors="#0A2540",zorder=26)
+ax.scatter(a.lon,a.lat,s=26,c=AV,alpha=0.95,lw=0.6,edgecolors="#06182B",zorder=26)
 
 d = {n:int((np.hypot(df.lon-x,df.lat-y)<0.25).sum()) for n,(x,y) in sitios.items()}
 halo=[pe.withStroke(linewidth=3,foreground=TIERRA)]
@@ -83,7 +83,7 @@ for n,(x,y) in sitios.items():
     ax.text(x+dx,y+dy-0.08,f"{d[n]} registros",fontsize=10,color=("#5A6A70" if dx>0 else SUAVE),ha=ha,va="center",zorder=30)
 ax.text(-81.53,3.88,"Malpelo",fontsize=10.5,color=TEXTO,zorder=30)
 ax.text(-80.2,6.2,"Océano Pacífico",fontsize=15,color=SUAVE,style="italic",alpha=0.8,zorder=30)
-ax.text(-76.35,5.0,"COLOMBIA",fontsize=13,color="#8C8270",fontweight="bold",rotation=90,ha="center",va="center",zorder=30)
+ax.text(-76.45,4.75,"Colombia",fontsize=13,color="#8C8270",style="italic",ha="center",va="center",zorder=30)
 
 ax.set_xlim(O,E); ax.set_ylim(S,N); ax.set_aspect("equal")
 ax.set_xticks(range(-82,-75)); ax.set_yticks(range(2,8))
@@ -93,10 +93,11 @@ for s in ax.spines.values(): s.set_visible(False)
 
 # leyenda
 lx,ly = -82.3,2.55
-ax.add_patch(Rectangle((lx-0.12,1.5),2.62,1.35,color=FONDO,alpha=0.72,lw=0,zorder=31))
-ax.scatter([lx],[ly+0.15],s=45,c=AV,edgecolors="#0A2540",lw=0.3,zorder=32); ax.text(lx+0.13,ly+0.15,f"Avistamientos ({len(a)})",va="center",fontsize=10,color=TEXTO,zorder=32)
+ax.text(lx-0.04,ly+0.45,"Convenciones",fontsize=11.5,color=TEXTO,fontweight="bold",va="center",zorder=32)
+ax.add_patch(Rectangle((lx-0.12,1.5),2.62,1.62,color=FONDO,alpha=0.72,lw=0,zorder=31))
+ax.scatter([lx],[ly+0.15],s=55,c=AV,edgecolors="#06182B",lw=0.6,zorder=32); ax.text(lx+0.13,ly+0.15,f"Avistamientos ({len(a)})",va="center",fontsize=10,color=TEXTO,zorder=32)
 ax.scatter([lx],[ly-0.08],s=35,c=TEL,zorder=32); ax.text(lx+0.13,ly-0.08,f"Telemetría satelital, 2013 ({len(t)})",va="center",fontsize=10,color=TEXTO,zorder=32)
-ax.add_patch(Circle((lx,ly-0.32),0.08,fill=False,ls=(0,(3,2)),ec=TEXTO,lw=1,zorder=32)); ax.text(lx+0.13,ly-0.32,"25 km alrededor de un sitio turístico",va="center",fontsize=10,color=TEXTO,zorder=32)
+ax.add_patch(Circle((lx,ly-0.32),0.08,fill=False,ls=(0,(3,2)),ec=TEXTO,lw=2,zorder=32)); ax.text(lx+0.13,ly-0.32,"25 km alrededor de un sitio turístico",va="center",fontsize=10,color=TEXTO,zorder=32)
 # escala de profundidad
 ax.text(lx-0.04,ly-0.62,"Profundidad (m)",fontsize=9,color=SUAVE,zorder=32)
 w=0.33
